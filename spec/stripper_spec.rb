@@ -18,9 +18,9 @@ describe :rack do
   describe :stripper do
     before(:each) { @stripper = Rack::Stripper.new(DummyWare.new(rss_feed), {}) }
 
-    describe :call! do
+    describe :_call do
       it 'should clean up the body of a response' do
-        status, headers, response = @stripper.call!({})
+        status, headers, response = @stripper._call({})
         response.body.should_not be_nil
         body = response.body.first
         body.should start_with('<rss')
@@ -30,7 +30,7 @@ describe :rack do
       it 'should add an instruction if told to do so' do
         opts = { add_xml_instruction: true }
         @stripper = Rack::Stripper.new(DummyWare.new(rss_feed), opts)
-        status, headers, response = @stripper.call!({})
+        status, headers, response = @stripper._call({})
         response.body.should_not be_nil
         body = response.body.first
         body.should start_with('<?xml version')

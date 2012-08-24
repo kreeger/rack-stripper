@@ -8,12 +8,13 @@ Add this line to your application's Gemfile and `bundle install` it:
 
     gem 'rack-stripper'
 
-Rack::Stripper is Rack middleware and can be used with any Rack-based application. In `config/initializers`, create new file called `middleware.rb` or something. Place the following code in it.
+Rack::Stripper is Rack middleware and can be used with any Rack-based application. In `config/application.rb`, place the following code.
 
-    require 'rack/stripper'
     config.middleware.use Rack::Stripper
 
-Then you'll see `Rack::Stripper` when you run `rake middleware`. Simple as that.
+Then you'll see `Rack::Stripper` when you run `rake middleware`. Simple as that. More info about using Rack middleware with Rails can be found [here][rails]. If you'd like the middleware to ensure an XML instruction is added to the bodies to XML-based responses, make that line look like this.
+
+    config.middleware.use Rack::Stripper, add_xml_instruction: true
 
 ## Contributing
 
@@ -25,4 +26,7 @@ Then you'll see `Rack::Stripper` when you run `rake middleware`. Simple as that.
 
 ## Copyright
 
-I made this. I released it under the [WTFPL](http://sam.zoy.org/wtfpl). See LICENSE for details, if you're into that sort of thing.
+I made this. I released it under the [WTFPL][]. See LICENSE for details, if you're into that sort of thing.
+
+[rails]:     http://guides.rubyonrails.org/rails_on_rack.html
+[WTFPL]:     http://sam.zoy.org/wtfpl

@@ -5,6 +5,7 @@ module Rack
     VERSION = '1.0.0'
 
     attr_accessor :add_xml_instruction
+    attr_accessor :is_xml_response
 
     def initialize(app, options={})
       @app = app
@@ -12,18 +13,22 @@ module Rack
     end
 
     def call(env)
-      call!(env)
+      dup._call(env)
     end
 
-    # Threadsave version using a shallow copy of env; shamelessly inspired by rack-tidy
-    # http://github.com/rbialek/rack-tidy
-    def call!(env)
-      @env = env.dup
-      status, headers, response = @app.call(@env)
-      stripped_body = response.respond_to?(:body) ? process_body(response.body) : nil
-      response = Rack::Response.new(stripped_body || response, status, headers)
-      response.finish
-      response.to_a
+    def _call(env)
+      status, headers, response = @app.call(env)
+
+      if headers.has_key?('Content-Type')
+        self.is_xml_response = !headers['Content-Type'].match(/xml/).nil?
+      end
+
+      if response.respond_to?(:body)
+        stripped_body = process_body(response.body)
+        headers['Content-Length'] = stripped_body.bytesize if headers.has_key?('Content-Length')
+        response = Rack::Response.new(stripped_body, status, headers)
+        response.to_a
+      end
     end
 
     protected
@@ -31,7 +36,7 @@ module Rack
     def process_body(body)
       body = body[0] if body.is_a?(Array)
       body.strip!
-      if self.add_xml_instruction && doesnt_have_xml_instruction_already?(body)
+      if self.add_xml_instruction && doesnt_have_xml_instruction_already?(body) && self.is_xml_response
         body = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n#{body}"
       end
       body
