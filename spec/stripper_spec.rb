@@ -16,7 +16,7 @@ EOS
 
 describe :rack do
   describe :stripper do
-    before(:each) { @stripper = Rack::Stripper::Stripper.new(DummyWare.new(rss_feed), {}) }
+    before(:each) { @stripper = Rack::Stripper.new(DummyWare.new(rss_feed), {}) }
 
     describe :call! do
       it 'should clean up the body of a response' do
@@ -29,7 +29,7 @@ describe :rack do
 
       it 'should add an instruction if told to do so' do
         opts = { add_xml_instruction: true }
-        @stripper = Rack::Stripper::Stripper.new(DummyWare.new(rss_feed), opts)
+        @stripper = Rack::Stripper.new(DummyWare.new(rss_feed), opts)
         status, headers, response = @stripper.call!({})
         response.body.should_not be_nil
         body = response.body.first
