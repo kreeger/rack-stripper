@@ -2,7 +2,7 @@ require 'rack'
 
 module Rack
   class Stripper
-    VERSION = '1.0.0'
+    VERSION = '1.0.1'
 
     attr_accessor :add_xml_instruction
     attr_accessor :is_xml_response
@@ -42,9 +42,14 @@ module Rack
       body
     end
 
+    # Determines if an instruction exists. In the safe case, say it already exists so we don't
+    # put doubles in, because that'd be worse than not having one at all.
+    #
+    # @param [String] body The body of the text.
+    #
+    # @return [Boolean] true if the content doesn't have an XML instruction, false if it does.
     def doesnt_have_xml_instruction_already?(body)
-      match = body.match /<?xml version=/
-      match.nil?
+      body.index('<?xml ').nil? rescue false
     end
   end
 end
