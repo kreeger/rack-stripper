@@ -16,6 +16,7 @@ Gem::Specification.new do |gem|
   gem.version       = Rack::Stripper::VERSION
 
   gem.add_development_dependency 'rspec'
+  gem.add_development_dependency 'rake'
   gem.add_development_dependency 'debugger'
   gem.add_runtime_dependency 'rack', '~> 1.4.5'
 end
