@@ -2,7 +2,7 @@ require 'rack'
 
 module Rack
   class Stripper
-    VERSION = '1.1.0'
+    VERSION = '1.1.1'
 
     attr_accessor :add_xml_instruction
     attr_accessor :is_xml_response
@@ -27,7 +27,7 @@ module Rack
         self.is_xml_response = !headers['Content-Type'].match(/xml/).nil?
       end
 
-      if response.respond_to?(:body)
+      if response.respond_to?(:body=)
         response.body = process_body(response.body)
         if headers.has_key?('Content-Length')
           headers['Content-Length'] = response.body.bytesize
